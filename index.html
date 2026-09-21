@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Mengajar Digital SMKN 13 Bandung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDD;
+    --paper-card:#FAF7EE;
+    --ink-dark:#223027;
+    --ink-mid:#3F5745;
+    --ochre:#B9822A;
+    --ochre-dark:#8A5F1C;
+    --red:#A23B2E;
+    --line:#D9CFB0;
+    --text:#2B2418;
+    --text-soft:#6B6353;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px);
+    background-size:100% 34px;
+    font-family:'Work Sans',sans-serif;
+    color:var(--text);
+  }
+  header{
+    background:var(--ink-dark);
+    color:var(--paper);
+    padding:28px 5vw 34px;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:6px;
+    background:repeating-linear-gradient(90deg,var(--ochre) 0 18px, transparent 18px 26px);
+    opacity:.85;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ochre); margin:0 0 8px;
+  }
+  h1{
+    font-family:'Zilla Slab',serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,40px);
+    margin:0 0 6px;
+  }
+  header p.sub{
+    margin:0; color:#C9D2C7; font-size:14.5px; max-width:520px;
+  }
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding:34px 5vw 60px;
+    display:grid;
+    grid-template-columns:minmax(300px,380px) 1fr;
+    gap:28px;
+    align-items:start;
+  }
+  @media (max-width:840px){ main{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px 22px 24px;
+    box-shadow:2px 3px 0 rgba(34,48,39,0.06);
+  }
+  .card h2{
+    font-family:'Zilla Slab',serif;
+    font-size:19px; margin:0 0 4px; color:var(--ink-dark);
+  }
+  .card .hint{ font-size:12.5px; color:var(--text-soft); margin:0 0 18px; }
+
+  label{
+    display:block; font-size:12px; font-weight:600; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--ink-mid); margin:14px 0 5px;
+  }
+  label:first-of-type{ margin-top:0; }
+  input,select,textarea{
+    width:100%; font-family:'Work Sans',sans-serif; font-size:14.5px;
+    padding:9px 10px; border:1px solid var(--line); border-radius:3px;
+    background:#fff; color:var(--text);
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none; border-color:var(--ochre);
+    box-shadow:0 0 0 3px rgba(185,130,42,0.15);
+  }
+  textarea{ resize:vertical; min-height:60px; }
+  .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+  button.primary{
+    margin-top:20px; width:100%;
+    background:var(--ink-dark); color:var(--paper);
+    border:none; border-radius:3px; padding:12px 16px;
+    font-family:'Work Sans',sans-serif; font-weight:600; font-size:14.5px;
+    cursor:pointer; letter-spacing:.02em;
+  }
+  button.primary:hover{ background:var(--ink-mid); }
+  button.secondary{
+    margin-top:8px; width:100%;
+    background:transparent; color:var(--text-soft);
+    border:1px solid var(--line); border-radius:3px; padding:9px 16px;
+    font-family:'Work Sans',sans-serif; font-size:13px; cursor:pointer;
+  }
+  button.secondary:hover{ border-color:var(--red); color:var(--red); }
+
+  .list-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:16px; gap:12px; flex-wrap:wrap;
+  }
+  .list-head h2{ font-family:'Zilla Slab',serif; font-size:20px; margin:0; color:var(--ink-dark); }
+  .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+  .filters input,.filters select{ width:auto; min-width:130px; font-size:13px; padding:7px 9px; }
+
+  .empty{
+    text-align:center; padding:50px 20px; color:var(--text-soft);
+    border:1px dashed var(--line); border-radius:4px; background:var(--paper-card);
+  }
+  .empty .big{ font-family:'Zilla Slab',serif; font-size:17px; color:var(--ink-dark); margin-bottom:4px; }
+
+  .entry{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--ink-mid);
+    border-radius:3px;
+    padding:16px 18px 16px 18px;
+    margin-bottom:14px;
+    position:relative;
+  }
+  .entry-top{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+  .stamp{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px; font-weight:500; color:var(--ochre-dark);
+    border:1.5px solid var(--ochre); border-radius:20px;
+    padding:3px 10px; transform:rotate(-2deg);
+    white-space:nowrap; flex-shrink:0;
+  }
+  .entry h3{
+    font-family:'Zilla Slab',serif; font-size:16.5px; margin:0 0 3px; color:var(--ink-dark);
+  }
+  .entry .meta{
+    font-size:12.5px; color:var(--text-soft);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .entry .materi{ margin:10px 0 4px; font-size:14px; }
+  .entry .materi b{ color:var(--ink-mid); }
+  .entry .catatan{
+    font-size:13px; color:var(--text-soft); margin-top:6px;
+    border-top:1px dashed var(--line); padding-top:8px;
+  }
+  .entry-actions{ margin-top:10px; display:flex; gap:8px; }
+  .entry-actions button{
+    font-family:'Work Sans',sans-serif; font-size:12px; padding:5px 11px;
+    border-radius:3px; cursor:pointer; background:transparent;
+  }
+  .btn-edit{ border:1px solid var(--line); color:var(--ink-mid); }
+  .btn-edit:hover{ border-color:var(--ink-mid); }
+  .btn-del{ border:1px solid var(--line); color:var(--red); }
+  .btn-del:hover{ border-color:var(--red); background:#FBEEEC; }
+
+  .status{ font-size:12px; color:var(--text-soft); margin-top:10px; min-height:16px; }
+  .status.err{ color:var(--red); }
+  .status.ok{ color:var(--ink-mid); }
+
+  .footer-note{
+    max-width:1080px; margin:0 auto; padding:0 5vw 40px;
+    font-size:12px; color:var(--text-soft); font-family:'IBM Plex Mono',monospace;
+  }
+
+  #login-overlay{
+    position:fixed; inset:0; background:rgba(34,48,39,0.82);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:100;
+  }
+  .login-card{
+    background:var(--paper-card); border:1px solid var(--line); border-radius:4px;
+    padding:30px 30px 26px; width:100%; max-width:340px;
+    box-shadow:2px 4px 0 rgba(34,48,39,0.2);
+  }
+  .login-card h2{
+    font-family:'Zilla Slab',serif; font-size:20px; margin:0 0 4px; color:var(--ink-dark);
+  }
+  .login-card p.hint{ margin:0 0 18px; }
+  .login-error{ font-size:12.5px; color:var(--red); min-height:16px; margin-top:8px; }
+
+  .guru-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.15);
+    font-size:12.5px; color:#C9D2C7; font-family:'IBM Plex Mono',monospace;
+  }
+  .guru-bar button{
+    background:transparent; border:1px solid rgba(255,255,255,0.3); color:#C9D2C7;
+    border-radius:3px; padding:4px 10px; font-family:'Work Sans',sans-serif;
+    font-size:12px; cursor:pointer;
+  }
+  .guru-bar button:hover{ border-color:var(--ochre); color:var(--ochre); }
+
+  input[readonly]{ background:#EFEADA; color:var(--text-soft); }
+
+  .login-tabs{ display:flex; gap:6px; margin-bottom:18px; }
+  .login-tab{
+    flex:1; text-align:center; padding:8px 6px; font-size:13px; font-weight:600;
+    border:1px solid var(--line); border-radius:3px; cursor:pointer;
+    background:#fff; color:var(--text-soft);
+  }
+  .login-tab.active{ background:var(--ink-dark); color:var(--paper); border-color:var(--ink-dark); }
+  .login-pane{ display:none; }
+  .login-pane.active{ display:block; }
+
+  .badge-admin{
+    background:var(--ochre); color:#3A2A08; font-size:10.5px; font-weight:600;
+    padding:2px 8px; border-radius:20px; margin-left:8px; letter-spacing:.03em;
+  }
+
+  .stats-row{ display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .stat-box{
+    flex:1; min-width:130px; background:var(--paper-card); border:1px solid var(--line);
+    border-radius:4px; padding:14px 16px;
+  }
+  .stat-box .num{ font-family:'Zilla Slab',serif; font-size:26px; color:var(--ink-dark); }
+  .stat-box .label{ font-size:12px; color:var(--text-soft); }
+
+  table.guru-table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.guru-table th{
+    text-align:left; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--text-soft); padding:6px 8px; border-bottom:1px solid var(--line);
+  }
+  table.guru-table td{ padding:9px 8px; border-bottom:1px solid var(--line); }
+  table.guru-table button{
+    font-size:12px; padding:4px 10px; border-radius:3px; cursor:pointer;
+    background:transparent; border:1px solid var(--line); color:var(--ink-mid);
+  }
+  table.guru-table button:hover{ border-color:var(--ochre); color:var(--ochre-dark); }
+</style>
+</head>
+<body>
+
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="login-tabs">
+      <div class="login-tab active" id="tab-guru">Guru</div>
+      <div class="login-tab" id="tab-admin">Admin</div>
+    </div>
+
+    <div class="login-pane active" id="pane-guru">
+      <h2>Masuk sebagai guru</h2>
+      <p class="hint">Nama baru akan otomatis terdaftar dengan PIN yang Anda buat.</p>
+      <label for="login-nama">Nama guru</label>
+      <input type="text" id="login-nama" placeholder="mis. Budi Santoso, S.Pd">
+      <label for="login-pin">PIN (4 angka)</label>
+      <input type="password" id="login-pin" inputmode="numeric" maxlength="4" placeholder="Contoh: 1234">
+      <button class="primary" id="btn-login" style="margin-top:16px;">Masuk</button>
+    </div>
+
+    <div class="login-pane" id="pane-admin">
+      <h2>Masuk sebagai admin</h2>
+      <p class="hint">Untuk memantau agenda semua guru. Password pertama kali akan menjadi password admin tetap.</p>
+      <label for="admin-pass">Password admin</label>
+      <input type="password" id="admin-pass" placeholder="Buat / masukkan password admin">
+      <button class="primary" id="btn-admin-login" style="margin-top:16px;">Masuk sebagai admin</button>
+    </div>
+
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<header>
+  <p class="eyebrow">Buku Agenda &middot; Kegiatan Belajar Mengajar</p>
+  <h1>Agenda Mengajar Digital SMKN 13 Bandung</h1>
+  <p class="sub">Catat kelas, materi, dan kegiatan setiap kali mengajar. Semua catatan tersimpan otomatis di database bersama.</p>
+  <div class="guru-bar">
+    <span>Masuk sebagai: <strong id="guru-nama-label">-</strong></span>
+    <button id="btn-logout">Keluar</button>
+  </div>
+</header>
+
+<main>
+  <section class="card" id="admin-panel" style="display:none; grid-column:1/-1;">
+    <h2>Panel monitoring admin</h2>
+    <p class="hint">Ringkasan aktivitas seluruh guru.</p>
+    <div class="stats-row">
+      <div class="stat-box"><div class="num" id="stat-guru">0</div><div class="label">Guru terdaftar</div></div>
+      <div class="stat-box"><div class="num" id="stat-agenda">0</div><div class="label">Total agenda tercatat</div></div>
+      <div class="stat-box"><div class="num" id="stat-hari-ini">0</div><div class="label">Agenda hari ini</div></div>
+    </div>
+    <table class="guru-table" id="guru-table">
+      <thead><tr><th>Nama guru</th><th>Jumlah agenda</th><th>Agenda terakhir</th><th></th></tr></thead>
+      <tbody id="guru-table-body"></tbody>
+    </table>
+  </section>
+
+  <section class="card" id="form-card">
+    <h2 id="form-title">Tambah catatan</h2>
+    <p class="hint">Isi setelah selesai mengajar di kelas.</p>
+
+    <div class="row2">
+      <div>
+        <label for="f-tanggal">Tanggal</label>
+        <input type="date" id="f-tanggal">
+      </div>
+      <div>
+        <label for="f-jam">Jam ke / waktu</label>
+        <input type="text" id="f-jam" placeholder="mis. Jam ke-3&ndash;4 / 08.30&ndash;09.50">
+      </div>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label for="f-kelas">Kelas</label>
+        <select id="f-kelas">
+          <option value="">Pilih kelas</option>
+          <optgroup label="Kelas X">
+            <option value="X KA 1">X KA 1</option>
+            <option value="X KA 2">X KA 2</option>
+            <option value="X KA 3">X KA 3</option>
+            <option value="X KA 4">X KA 4</option>
+            <option value="X KA 5">X KA 5</option>
+            <option value="X KA 6">X KA 6</option>
+            <option value="X TJKT 1">X TJKT 1</option>
+            <option value="X TJKT 2">X TJKT 2</option>
+            <option value="X TJKT 3">X TJKT 3</option>
+            <option value="X PPLG 1">X PPLG 1</option>
+            <option value="X PPLG 2">X PPLG 2</option>
+            <option value="X PPLG 3">X PPLG 3</option>
+          </optgroup>
+          <optgroup label="Kelas XI">
+            <option value="XI KA 1">XI KA 1</option>
+            <option value="XI KA 2">XI KA 2</option>
+            <option value="XI KA 3">XI KA 3</option>
+            <option value="XI KA 4">XI KA 4</option>
+            <option value="XI KA 5">XI KA 5</option>
+            <option value="XI KA 6">XI KA 6</option>
+            <option value="XI TKJ 1">XI TKJ 1</option>
+            <option value="XI TKJ 2">XI TKJ 2</option>
+            <option value="XI TKJ 3">XI TKJ 3</option>
+            <option value="XI RPL 1">XI RPL 1</option>
+            <option value="XI RPL 2">XI RPL 2</option>
+          </optgroup>
+          <optgroup label="Kelas XII">
+            <option value="XII KA 1">XII KA 1</option>
+            <option value="XII KA 2">XII KA 2</option>
+            <option value="XII KA 3">XII KA 3</option>
+            <option value="XII KA 4">XII KA 4</option>
+            <option value="XII KA 5">XII KA 5</option>
+            <option value="XII KA 6">XII KA 6</option>
+            <option value="XII TKJ 1">XII TKJ 1</option>
+            <option value="XII TKJ 2">XII TKJ 2</option>
+            <option value="XII TKJ 3">XII TKJ 3</option>
+            <option value="XII RPL 1">XII RPL 1</option>
+            <option value="XII RPL 2">XII RPL 2</option>
+          </optgroup>
+          <optgroup label="Kelas XIII">
+            <option value="XIII KA 1">XIII KA 1</option>
+            <option value="XIII KA 2">XIII KA 2</option>
+            <option value="XIII KA 3">XIII KA 3</option>
+            <option value="XIII KA 4">XIII KA 4</option>
+            <option value="XIII KA 5">XIII KA 5</option>
+            <option value="XIII KA 6">XIII KA 6</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <label for="f-mapel">Mata pelajaran</label>
+        <input type="text" id="f-mapel" placeholder="mis. Matematika">
+      </div>
+    </div>
+
+    <label for="f-materi">Materi / topik</label>
+    <input type="text" id="f-materi" placeholder="mis. Persamaan linear satu variabel">
+
+    <label for="f-kegiatan">Uraian kegiatan</label>
+    <textarea id="f-kegiatan" placeholder="Kegiatan pembelajaran yang dilakukan..."></textarea>
+
+    <div class="row2">
+      <div>
+        <label for="f-guru">Nama guru</label>
+        <input type="text" id="f-guru" placeholder="mis. Budi Santoso, S.Pd">
+      </div>
+      <div>
+        <label for="f-hadir">Siswa tidak hadir</label>
+        <input type="text" id="f-hadir" placeholder="mis. 2 siswa / nihil">
+      </div>
+    </div>
+
+    <label for="f-catatan">Catatan / kendala (opsional)</label>
+    <textarea id="f-catatan" placeholder="Catatan tambahan, kendala, atau tindak lanjut..."></textarea>
+
+    <button class="primary" id="btn-save">Simpan agenda</button>
+    <button class="secondary" id="btn-cancel" style="display:none;">Batalkan perubahan</button>
+    <p class="status" id="status"></p>
+  </section>
+
+  <section>
+    <div class="list-head">
+      <h2>Riwayat agenda</h2>
+      <div class="filters">
+        <select id="filter-kelas">
+          <option value="">Semua kelas</option>
+          <optgroup label="Kelas X">
+            <option value="X KA 1">X KA 1</option>
+            <option value="X KA 2">X KA 2</option>
+            <option value="X KA 3">X KA 3</option>
+            <option value="X KA 4">X KA 4</option>
+            <option value="X KA 5">X KA 5</option>
+            <option value="X KA 6">X KA 6</option>
+            <option value="X TJKT 1">X TJKT 1</option>
+            <option value="X TJKT 2">X TJKT 2</option>
+            <option value="X TJKT 3">X TJKT 3</option>
+            <option value="X PPLG 1">X PPLG 1</option>
+            <option value="X PPLG 2">X PPLG 2</option>
+            <option value="X PPLG 3">X PPLG 3</option>
+          </optgroup>
+          <optgroup label="Kelas XI">
+            <option value="XI KA 1">XI KA 1</option>
+            <option value="XI KA 2">XI KA 2</option>
+            <option value="XI KA 3">XI KA 3</option>
+            <option value="XI KA 4">XI KA 4</option>
+            <option value="XI KA 5">XI KA 5</option>
+            <option value="XI KA 6">XI KA 6</option>
+            <option value="XI TKJ 1">XI TKJ 1</option>
+            <option value="XI TKJ 2">XI TKJ 2</option>
+            <option value="XI TKJ 3">XI TKJ 3</option>
+            <option value="XI RPL 1">XI RPL 1</option>
+            <option value="XI RPL 2">XI RPL 2</option>
+          </optgroup>
+          <optgroup label="Kelas XII">
+            <option value="XII KA 1">XII KA 1</option>
+            <option value="XII KA 2">XII KA 2</option>
+            <option value="XII KA 3">XII KA 3</option>
+            <option value="XII KA 4">XII KA 4</option>
+            <option value="XII KA 5">XII KA 5</option>
+            <option value="XII KA 6">XII KA 6</option>
+            <option value="XII TKJ 1">XII TKJ 1</option>
+            <option value="XII TKJ 2">XII TKJ 2</option>
+            <option value="XII TKJ 3">XII TKJ 3</option>
+            <option value="XII RPL 1">XII RPL 1</option>
+            <option value="XII RPL 2">XII RPL 2</option>
+          </optgroup>
+          <optgroup label="Kelas XIII">
+            <option value="XIII KA 1">XIII KA 1</option>
+            <option value="XIII KA 2">XIII KA 2</option>
+            <option value="XIII KA 3">XIII KA 3</option>
+            <option value="XIII KA 4">XIII KA 4</option>
+            <option value="XIII KA 5">XIII KA 5</option>
+            <option value="XIII KA 6">XIII KA 6</option>
+          </optgroup>
+        </select>
+        <input type="date" id="filter-tanggal">
+        <select id="filter-sort">
+          <option value="desc">Terbaru dulu</option>
+          <option value="asc">Terlama dulu</option>
+        </select>
+        <button class="secondary" id="btn-export" style="width:auto; margin-top:0; white-space:nowrap;">Ekspor ke Excel</button>
+      </div>
+    </div>
+    <div id="list"></div>
+  </section>
+</main>
+
+<p class="footer-note">Data tersimpan di database bersama artifact ini &mdash; terlihat oleh siapa pun yang membuka halaman ini.</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbxfkn5BbKw2GLPG1FaTMLGy0TTeFlc5KruZ1faIR48abHf29GocgXrtOhN-DhuJ-mow/exec';
+
+const storage = {
+  async get(key){
+    const res = await fetch(`${API_URL}?action=get&key=${encodeURIComponent(key)}`);
+    const data = await res.json();
+    if(!data.ok) throw new Error('not found');
+    return { key, value: data.value, shared:true };
+  },
+  async set(key, value){
+    const res = await fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'set', key, value }) });
+    const data = await res.json();
+    return data.ok ? { key, value, shared:true } : null;
+  },
+  async delete(key){
+    const res = await fetch(API_URL, { method:'POST', body: JSON.stringify({ action:'delete', key }) });
+    const data = await res.json();
+    return data.ok ? { key, deleted:true, shared:true } : null;
+  },
+  async list(prefix){
+    const res = await fetch(`${API_URL}?action=list&prefix=${encodeURIComponent(prefix||'')}`);
+    const data = await res.json();
+    return { keys: data.ok ? data.keys : [] };
+  }
+};
+
+const PREFIX = 'agenda:';
+const GURU_PREFIX = 'guru:';
+const ADMIN_KEY = 'admin:master';
+let editingId = null;
+let currentEntries = [];
+let currentGuru = null;
+let isAdmin = false;
+
+function slugify(nama){
+  return nama.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'');
+}
+
+function switchTab(which){
+  $('login-error').textContent = '';
+  $('tab-guru').classList.toggle('active', which === 'guru');
+  $('tab-admin').classList.toggle('active', which === 'admin');
+  $('pane-guru').classList.toggle('active', which === 'guru');
+  $('pane-admin').classList.toggle('active', which === 'admin');
+}
+
+async function handleAdminLogin(){
+  const pass = $('admin-pass').value.trim();
+  const errEl = $('login-error');
+  errEl.textContent = '';
+
+  if(!pass){ errEl.textContent = 'Password wajib diisi.'; return; }
+
+  try{
+    let existing = null;
+    try{
+      const r = await storage.get(ADMIN_KEY);
+      if(r && r.value) existing = JSON.parse(r.value);
+    }catch(e){ /* belum ada password admin */ }
+
+    if(existing){
+      if(existing.pass !== pass){
+        errEl.textContent = 'Password admin salah.';
+        return;
+      }
+    }else{
+      const result = await storage.set(ADMIN_KEY, JSON.stringify({pass}));
+      if(!result){ errEl.textContent = 'Gagal menyimpan password admin. Coba lagi.'; return; }
+    }
+
+    isAdmin = true;
+    currentGuru = null;
+    onLoginSuccess();
+  }catch(e){
+    errEl.textContent = 'Terjadi kesalahan. Coba lagi.';
+  }
+}
+
+async function handleLogin(){
+  const nama = $('login-nama').value.trim();
+  const pin = $('login-pin').value.trim();
+  const errEl = $('login-error');
+  errEl.textContent = '';
+
+  if(!nama){ errEl.textContent = 'Nama guru wajib diisi.'; return; }
+  if(!/^\d{4}$/.test(pin)){ errEl.textContent = 'PIN harus 4 angka.'; return; }
+
+  const slug = slugify(nama);
+  if(!slug){ errEl.textContent = 'Nama tidak valid.'; return; }
+
+  try{
+    let existing = null;
+    try{
+      const r = await storage.get(GURU_PREFIX + slug);
+      if(r && r.value) existing = JSON.parse(r.value);
+    }catch(e){ /* belum terdaftar */ }
+
+    if(existing){
+      if(existing.pin !== pin){
+        errEl.textContent = 'PIN salah untuk nama guru ini.';
+        return;
+      }
+      currentGuru = existing.nama;
+    }else{
+      const record = { nama, pin, slug };
+      const result = await storage.set(GURU_PREFIX + slug, JSON.stringify(record));
+      if(!result){ errEl.textContent = 'Gagal mendaftarkan akun. Coba lagi.'; return; }
+      currentGuru = nama;
+    }
+
+    onLoginSuccess();
+  }catch(e){
+    errEl.textContent = 'Terjadi kesalahan. Coba lagi.';
+  }
+}
+
+function onLoginSuccess(){
+  $('login-overlay').style.display = 'none';
+
+  if(isAdmin){
+    $('guru-nama-label').innerHTML = 'Admin <span class="badge-admin">Monitoring</span>';
+    $('admin-panel').style.display = 'block';
+    $('form-card').style.display = 'none';
+    renderAdminPanel();
+  }else{
+    $('guru-nama-label').textContent = currentGuru;
+    $('admin-panel').style.display = 'none';
+    $('form-card').style.display = 'block';
+    $('f-guru').value = currentGuru;
+    $('f-guru').readOnly = true;
+  }
+  loadEntries();
+}
+
+function handleLogout(){
+  currentGuru = null;
+  isAdmin = false;
+  $('login-nama').value = '';
+  $('login-pin').value = '';
+  $('admin-pass').value = '';
+  $('login-error').textContent = '';
+  $('f-guru').readOnly = false;
+  switchTab('guru');
+  clearForm();
+  $('login-overlay').style.display = 'flex';
+}
+
+const $ = (id) => document.getElementById(id);
+const fields = ['tanggal','jam','kelas','mapel','materi','kegiatan','guru','hadir','catatan'];
+
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+$('f-tanggal').value = todayISO();
+
+function setStatus(msg, type){
+  const el = $('status');
+  el.textContent = msg;
+  el.className = 'status' + (type ? ' ' + type : '');
+  if(msg) setTimeout(()=>{ if(el.textContent===msg) el.textContent=''; }, 3500);
+}
+
+function clearForm(){
+  fields.forEach(f => { const el = $('f-'+f); if(el) el.value=''; });
+  $('f-tanggal').value = todayISO();
+  if(currentGuru) $('f-guru').value = currentGuru;
+  editingId = null;
+  $('form-title').textContent = 'Tambah catatan';
+  $('btn-save').textContent = 'Simpan agenda';
+  $('btn-cancel').style.display = 'none';
+}
+
+function formatTanggal(iso){
+  if(!iso) return '-';
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+async function saveEntry(){
+  const data = {};
+  fields.forEach(f => data[f] = $('f-'+f).value.trim());
+
+  if(!data.tanggal || !data.kelas || !data.mapel){
+    setStatus('Tanggal, kelas, dan mata pelajaran wajib diisi.', 'err');
+    return;
+  }
+
+  const id = editingId || (Date.now().toString(36) + Math.random().toString(36).slice(2,7));
+  data.id = id;
+  data.updatedAt = new Date().toISOString();
+
+  try{
+    const result = await storage.set(PREFIX + id, JSON.stringify(data));
+    if(!result){ setStatus('Gagal menyimpan. Coba lagi.', 'err'); return; }
+    setStatus(editingId ? 'Perubahan disimpan.' : 'Agenda tersimpan.', 'ok');
+    clearForm();
+    loadEntries();
+  }catch(e){
+    setStatus('Terjadi kesalahan saat menyimpan.', 'err');
+  }
+}
+
+async function deleteEntry(id){
+  if(!confirm('Hapus catatan agenda ini?')) return;
+  try{
+    await storage.delete(PREFIX + id);
+    loadEntries();
+  }catch(e){
+    setStatus('Gagal menghapus catatan.', 'err');
+  }
+}
+
+function editEntry(entry){
+  editingId = entry.id;
+  fields.forEach(f => { if($('f-'+f)) $('f-'+f).value = entry[f] || ''; });
+  $('form-title').textContent = 'Ubah catatan';
+  $('btn-save').textContent = 'Perbarui agenda';
+  $('btn-cancel').style.display = 'block';
+  $('form-card').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+async function loadEntries(){
+  const listEl = $('list');
+  listEl.innerHTML = '<p class="hint">Memuat agenda...</p>';
+
+  let keysResult;
+  try{
+    keysResult = await storage.list(PREFIX);
+  }catch(e){
+    listEl.innerHTML = '<div class="empty"><div class="big">Belum ada data</div>Mulai isi form di sebelah kiri.</div>';
+    return;
+  }
+
+  const keys = keysResult && keysResult.keys ? keysResult.keys : [];
+  if(keys.length === 0){
+    listEl.innerHTML = '<div class="empty"><div class="big">Belum ada agenda tercatat</div>Isi form di sebelah kiri untuk mulai mencatat.</div>';
+    return;
+  }
+
+  const entries = [];
+  for(const k of keys){
+    try{
+      const r = await storage.get(k);
+      if(r && r.value) entries.push(JSON.parse(r.value));
+    }catch(e){ /* skip broken entry */ }
+  }
+
+  const kelasFilter = $('filter-kelas').value.trim().toLowerCase();
+  const tanggalFilter = $('filter-tanggal').value;
+  const sortDir = $('filter-sort').value;
+
+  let filtered = entries.filter(e => {
+    const matchKelas = !kelasFilter || (e.kelas||'').toLowerCase().includes(kelasFilter);
+    const matchTanggal = !tanggalFilter || e.tanggal === tanggalFilter;
+    return matchKelas && matchTanggal;
+  });
+
+  filtered.sort((a,b) => {
+    const cmp = (a.tanggal||'').localeCompare(b.tanggal||'');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  currentEntries = filtered;
+
+  if(filtered.length === 0){
+    listEl.innerHTML = '<div class="empty"><div class="big">Tidak ada hasil</div>Coba ubah filter pencarian.</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(e => `
+    <div class="entry">
+      <div class="entry-top">
+        <div>
+          <h3>${escapeHtml(e.mapel)} &middot; Kelas ${escapeHtml(e.kelas)}</h3>
+          <div class="meta">${escapeHtml(e.jam || '-')}${e.guru ? ' &middot; ' + escapeHtml(e.guru) : ''}</div>
+        </div>
+        <span class="stamp">${formatTanggal(e.tanggal)}</span>
+      </div>
+      ${e.materi ? `<div class="materi"><b>Materi:</b> ${escapeHtml(e.materi)}</div>` : ''}
+      ${e.kegiatan ? `<div class="materi">${escapeHtml(e.kegiatan)}</div>` : ''}
+      ${e.hadir ? `<div class="meta" style="margin-top:6px;">Tidak hadir: ${escapeHtml(e.hadir)}</div>` : ''}
+      ${e.catatan ? `<div class="catatan">${escapeHtml(e.catatan)}</div>` : ''}
+      <div class="entry-actions">
+        ${isOwner(e) ? `
+          <button class="btn-edit" data-id="${e.id}">Ubah</button>
+          <button class="btn-del" data-id="${e.id}">Hapus</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  listEl.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const entry = filtered.find(e => e.id === btn.dataset.id);
+      if(entry) editEntry(entry);
+    });
+  });
+  listEl.querySelectorAll('.btn-del').forEach(btn => {
+    btn.addEventListener('click', () => deleteEntry(btn.dataset.id));
+  });
+}
+
+async function renderAdminPanel(){
+  if(!isAdmin) return;
+
+  let guruKeys = [], agendaKeys = [];
+  try{ guruKeys = (await storage.list(GURU_PREFIX)).keys || []; }catch(e){}
+  try{ agendaKeys = (await storage.list(PREFIX)).keys || []; }catch(e){}
+
+  const guruList = [];
+  for(const k of guruKeys){
+    try{
+      const r = await storage.get(k);
+      if(r && r.value) guruList.push(JSON.parse(r.value));
+    }catch(e){}
+  }
+
+  const agendaList = [];
+  for(const k of agendaKeys){
+    try{
+      const r = await storage.get(k);
+      if(r && r.value) agendaList.push(JSON.parse(r.value));
+    }catch(e){}
+  }
+
+  const today = todayISO();
+  $('stat-guru').textContent = guruList.length;
+  $('stat-agenda').textContent = agendaList.length;
+  $('stat-hari-ini').textContent = agendaList.filter(a => a.tanggal === today).length;
+
+  const rows = guruList.map(g => {
+    const milik = agendaList.filter(a => (a.guru||'').trim().toLowerCase() === g.nama.trim().toLowerCase());
+    const terakhir = milik.map(a => a.tanggal).sort().reverse()[0];
+    return { nama: g.nama, slug: g.slug, jumlah: milik.length, terakhir: terakhir ? formatTanggal(terakhir) : '-' };
+  }).sort((a,b) => b.jumlah - a.jumlah);
+
+  const tbody = $('guru-table-body');
+  if(rows.length === 0){
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-soft);">Belum ada guru yang mendaftar.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${escapeHtml(r.nama)}</td>
+      <td>${r.jumlah}</td>
+      <td>${r.terakhir}</td>
+      <td><button class="btn-reset-pin" data-slug="${r.slug}" data-nama="${escapeHtml(r.nama)}">Reset PIN</button></td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.btn-reset-pin').forEach(btn => {
+    btn.addEventListener('click', () => resetGuruPin(btn.dataset.slug, btn.dataset.nama));
+  });
+}
+
+async function resetGuruPin(slug, nama){
+  const pinBaru = prompt(`PIN baru untuk ${nama} (4 angka):`);
+  if(pinBaru === null) return;
+  if(!/^\d{4}$/.test(pinBaru.trim())){
+    alert('PIN harus 4 angka.');
+    return;
+  }
+  try{
+    const r = await storage.get(GURU_PREFIX + slug);
+    if(!r || !r.value){ alert('Data guru tidak ditemukan.'); return; }
+    const record = JSON.parse(r.value);
+    record.pin = pinBaru.trim();
+    await storage.set(GURU_PREFIX + slug, JSON.stringify(record));
+    alert(`PIN untuk ${nama} berhasil direset.`);
+  }catch(e){
+    alert('Gagal mereset PIN. Coba lagi.');
+  }
+}
+
+function isOwner(entry){
+  if(isAdmin) return true;
+  return currentGuru && (entry.guru||'').trim().toLowerCase() === currentGuru.trim().toLowerCase();
+}
+
+function exportToExcel(){
+  if(!currentEntries || currentEntries.length === 0){
+    setStatus('Tidak ada data untuk diekspor.', 'err');
+    return;
+  }
+
+  const rows = currentEntries.map(e => ({
+    'Tanggal': formatTanggal(e.tanggal),
+    'Jam ke / Waktu': e.jam || '',
+    'Kelas': e.kelas || '',
+    'Mata Pelajaran': e.mapel || '',
+    'Materi / Topik': e.materi || '',
+    'Uraian Kegiatan': e.kegiatan || '',
+    'Guru': e.guru || '',
+    'Siswa Tidak Hadir': e.hadir || '',
+    'Catatan': e.catatan || ''
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  ws['!cols'] = [
+    {wch:12},{wch:16},{wch:10},{wch:18},{wch:24},{wch:36},{wch:20},{wch:16},{wch:30}
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Agenda Mengajar');
+
+  const today = new Date().toISOString().slice(0,10);
+  XLSX.writeFile(wb, `agenda-mengajar-${today}.xlsx`);
+  setStatus('File Excel sedang diunduh.', 'ok');
+}
+
+function escapeHtml(str){
+  if(!str) return '';
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+$('btn-save').addEventListener('click', saveEntry);
+$('btn-cancel').addEventListener('click', clearForm);
+$('filter-kelas').addEventListener('change', loadEntries);
+$('filter-tanggal').addEventListener('change', loadEntries);
+$('filter-sort').addEventListener('change', loadEntries);
+$('btn-export').addEventListener('click', exportToExcel);
+$('btn-login').addEventListener('click', handleLogin);
+$('btn-admin-login').addEventListener('click', handleAdminLogin);
+$('tab-guru').addEventListener('click', () => switchTab('guru'));
+$('tab-admin').addEventListener('click', () => switchTab('admin'));
+$('admin-pass').addEventListener('keydown', (ev) => { if(ev.key === 'Enter') handleAdminLogin(); });
+$('btn-logout').addEventListener('click', handleLogout);
+$('login-pin').addEventListener('keydown', (ev) => { if(ev.key === 'Enter') handleLogin(); });
+$('login-nama').addEventListener('keydown', (ev) => { if(ev.key === 'Enter') $('login-pin').focus(); });
+
+loadEntries();
+</script>
+</body>
+</html>
